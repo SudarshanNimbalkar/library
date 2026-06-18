@@ -1,13 +1,8 @@
 </main>
-<footer class="py-4 text-center footer-glow">
-    <p class="mb-0">© <?= date('Y') ?> Saraswati Library · Enlightening Knowledge</p>
-    </div>
+<footer class="footer-glow">
+    <p>© <?= date('Y') ?> Saraswati Library · Enlightening Knowledge</p>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</main>
-<script src="assets/js/app.js"></script>
-
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
 </body>
-
 </html>
