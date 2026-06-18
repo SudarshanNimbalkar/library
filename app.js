@@ -24,8 +24,8 @@ function showPage(pageId) {
 }
 
 function proceedToAuth() {
-  const date = document.getElementById('booking-date').value;
-  const time = document.getElementById('booking-time').value;
+  const date = document.getElementById('booking-date')?.value || '';
+  const time = document.getElementById('booking-time')?.value || 'Full Day';
 
   if (!date || !time) {
     showToast('⚠️ Please select a date and time slot first!', 'warn');
@@ -39,14 +39,13 @@ function proceedToAuth() {
   if (state.isLoggedIn) {
     confirmBooking();
   } else {
-    // Show login with a note to register if not yet
-    showPage('page-login');
     showToast('🔐 Sign in to complete your booking', 'info');
+    setTimeout(() => { window.location.href = 'login.php'; }, 700);
   }
 }
 
 function returnToBooking() {
-  showPage('page-booking');
+  window.location.href = 'tables.php';
 }
 
 /* ===== TABLE SELECTION ===== */
@@ -138,10 +137,10 @@ function handleLogin() {
 
   showToast('🔄 Signing you in…', 'info');
   apiPost({ action: 'login', email, password: pass }).then(data => {
-    if (!data.ok) { showPage('page-register'); showToast('📝 Account not found. Please register to continue.', 'warn'); return; }
+    if (!data.ok) { showToast('📝 Account not found. Please register to continue.', 'warn'); setTimeout(() => { window.location.href = 'register.php'; }, 900); return; }
     state.isLoggedIn = true; state.user = data.user; localStorage.setItem('saraswati_user', JSON.stringify(data.user));
     if (state.fromBooking && state.selectedTable) confirmBooking();
-    else { showPage('page-booking'); showToast('👋 Welcome back!'); }
+    else { window.location.href = 'tables.php'; }
   });
 }
 
@@ -159,10 +158,10 @@ function handleRegister() {
   if (!first || !email || !password) { showToast('⚠️ Name, email and password are required', 'warn'); return; }
   showToast('🔄 Creating your account…', 'info');
   apiPost({ action: 'register', name: `${first} ${last}`.trim(), email, phone, password }).then(data => {
-    if (!data.ok) { showToast(data.message || 'Registration failed', 'warn'); showPage('page-login'); return; }
+    if (!data.ok) { showToast(data.message || 'Registration failed', 'warn'); setTimeout(() => { window.location.href = 'login.php'; }, 900); return; }
     state.isLoggedIn = true; state.user = data.user; localStorage.setItem('saraswati_user', JSON.stringify(data.user));
     if (state.fromBooking && state.selectedTable) confirmBooking();
-    else { showPage('page-booking'); showToast('🎉 Account created! Start booking your table.'); }
+    else { window.location.href = 'tables.php'; }
   });
 }
 
@@ -289,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.transform = '';
     });
     card.addEventListener('click', () => {
-      showPage('page-booking');
+      window.location.href = 'tables.php';
       const zone = card.querySelector('.zone-name').textContent.split(' ')[0].toLowerCase();
       setTimeout(() => {
         document.getElementById('zone-filter').value = zone;
@@ -332,5 +331,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Start on landing page
-  showPage('page-landing');
+  if (document.getElementById('page-landing')) showPage('page-landing');
 });
